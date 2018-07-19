@@ -19,8 +19,8 @@
       <ul>
         <li>Username: <%= user.username %></li>
       </ul>
-      <form action="/user/<%= user[i].id%>?_method=DELETE" method="POST">
-        <input type="submit" name="DELETE">
+      <form action="/user/<%= user.id%>?_method=DELETE" method="POST">
+        <input type="submit"><br/>
       </form>
     </section>
   </main>

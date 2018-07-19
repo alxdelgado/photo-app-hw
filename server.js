@@ -20,9 +20,14 @@ app.get('/', (req, res) => {
   res.render('index.ejs');
 });
 
-// Controller
-const userController = require('./controllers/userController');
-app.use('/user', userController); 
+// User Controller //
+const userController = require('./controllers/userController')
+app.use('/user', userController) 
+
+// Photo Controller // 
+const photosController = require('./controllers/photosController')
+app.use('/photos', photosController)
+
 
 
 

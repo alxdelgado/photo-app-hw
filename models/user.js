@@ -1,4 +1,7 @@
-const mongoose = require('mongoose'); 
+const mongoose = require('mongoose');
+const Photos = require('./photos')
+
+
 const userSchema = new mongoose.Schema({
   username:{
     type: String,

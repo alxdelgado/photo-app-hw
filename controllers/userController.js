@@ -1,17 +1,23 @@
 // Setting up the controller
 const express = require('express'); 
 const router = express.Router(); 
+
 const User = require('../models/user'); 
-const Photo = require('../models/photos')
+const Photo = require('../models/photos');
 
 ///////////////////////////////////////
 //  USER INDEX ROUTE // 
-router.get('/', (req, res) => {
-  User.find({}, (err, foundUser) => {
-    res.render('user/index.ejs', {
-      user: foundUser
+router.get('/', async (req, res, next) => {
+
+  try {
+    const foundUser = await User.find({});
+      res.render('user/index.ejs', {
+        user: foundUser
     });
-  });
+  } catch(err) {
+    next(err)
+  }
+
 });
 //////////////////////////////////////
 
@@ -19,20 +25,33 @@ router.get('/', (req, res) => {
 
 ///////////////////////////////////////
 //  USER NEW ROUTE - shows new create page. // 
-router.get('/new', (req, res) => {
-  res.render('user/new.ejs') 
+router.get('/new', async (req, res, next) => {
+
+  try {
+    const newUser = await User.find({});
+    res.render('user/new.ejs')
+  } catch(err) {
+    next(err)
+  }
+ 
 });
 ///////////////////////////////////////
 
 
 ///////////////////////////////////////
 // SHOW ROUTE // 
-router.get('/:id', (req, res) => {
-  User.findById(req.params.id, (err, foundUser) => {
-    res.render('user/show.ejs', {
-      user: foundUser
+router.get('/:id', async (req, res) => {
+
+  try {
+    const showUser = await User.findById(req.params.id);
+      res.render('user/show.ejs', {
+      user: showUser
     });
-  });
+
+  } catch(err) {
+
+  }
+
 });
 ///////////////////////////////////////
 
@@ -40,24 +59,20 @@ router.get('/:id', (req, res) => {
 
 ///////////////////////////////////////
 // DELETE ROUTE - this is where you delete associated articles. 
-router.delete('/:id', (req, res) => {
-  User.findByIdAndRemove(req.params.id, (err, deletedUser) => {
-    console.log(deletedUser, ' this is the deletedUser')
-    
-    // we are collecting all of the photo Ids from the deletedUsers articles property
-    const photoIds = [];
-    for(let i =0; i < deletedUser.photos.length; i++){
-      photoIds.push(deletedUser.photos[i].id)
-    }
+router.delete('/:id', async (req, res) => {
 
-    Photo.remove({
-      _id: {$in: photoIds}
-    }, (err, data) => {
-      res.redirect('/user')  
-    
 
-    });
-  });
+  try {
+
+    const deletedUser = await User.findByIdAndRemove(req.params.id)
+    res.redirect('/user')
+
+  } catch(err) {
+
+    res.send(err)
+
+  }
+
 });
 ///////////////////////////////////////
 
@@ -65,23 +80,36 @@ router.delete('/:id', (req, res) => {
 
 ///////////////////////////////////////
 // EDIT ROUTE // 
-router.get('/:id/edit', (req, res) => {
-  User.findById(req.params.id, (err, foundUser) => {
-    res.render('user/edit.ejs', {
+router.get('/:id/edit', async (req, res) => {
+
+  try {
+    const editUser = await User.findById(req.params.id)
+      res.render('user/edit.ejs', {
       user: foundUser
     });
-  });
+
+  } catch(err) {
+    res.send(err)
+
+  }
+
 });
 ///////////////////////////////////////
 
 
 
 ///////////////////////////////////////
-// PUT ROUTE //
-router.put('/:id', (req, res) => {
-  User.findByIdAndUpdate(req.params.id, req.body, {new: true}, (err, updatedUser) => {
+// PUT/UPDATE ROUTE //
+router.put('/:id', async (req, res) => {
+
+  try {
+    const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body)
     res.redirect('/user')
-  });
+
+  } catch(err) {
+    res.send(err)
+  }
+
 });
 ///////////////////////////////////////
 
@@ -89,15 +117,15 @@ router.put('/:id', (req, res) => {
 
 ///////////////////////////////////////
 // CREATE ROUTE // 
-router.post('/', (req, res) => {
-  User.create(req.body, (err, createUser) => {
-    if(err) console.log('mongoose query error in user create route', err);
-    else {
-      console.log(createdUser)
-      console.log('^^^ here is the user you created')
-      res.redirect('/user'); 
-    }
-  });
+router.post('/', async (req, res) => {
+
+  try {
+    const createdUser = await User.create(req.body)
+    res.redirect('/user')
+  } catch(err) {
+    res.send(err)
+  }
+
 });
 ///////////////////////////////////////
 
