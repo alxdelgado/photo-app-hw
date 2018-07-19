@@ -33,7 +33,7 @@ router.get('/new', async (req, res, next) => {
   try {
     const newPhoto = await Photo.find({});
       res.render('photos/new.ejs', {
-      photos: allPhotos
+      photos: newPhoto
     });
 
   } catch(err) {
@@ -69,9 +69,9 @@ router.post('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
 
   try {
-    const showUser = await Photo.findById(req.params.id)
+    const showPhoto = await Photo.findById(req.params.id)
       res.render("photos/show.ejs", {  
-      photos: foundPhotos,
+      photos: showPhoto,
       user: foundUser 
     
       });  
@@ -98,7 +98,7 @@ router.delete('/:id', async (req, res) => {
 
   } catch(err) {
 
-    res.send(err)
+    res.send(err, 'error with the delete route')
   }
 
 });
@@ -113,7 +113,7 @@ router.get('/:id/edit', async (req, res) => {
   try {
     const editPhoto = await Photo.findById(req.params.id);
       res.render('photos/edit.ejs', {
-      photo: editPhotos,
+      photo: editPhoto,
       user: allUsers,
       photoUser: foundPhotoUser 
   }); 

@@ -16,8 +16,8 @@
   <main>
     <form method="POST" action="/photos">
       <select>
-        <% for (var i = 0; i < user.length; i++) { %>
-          <option value="<%= user[i]._id %>"><%= user[i].name %></option>
+        <% for (let i = 0; i < photos.length; i++) { %>
+          <option value="<%= photos[i]._id %>"><%= photos[i].name %></option>
         <% } -%>
       </select><br/>
       <input type="text" name="title"><br/>
